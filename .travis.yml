@@ -1,9 +1,9 @@
 language: python
 sudo: false
 python:
-  - "2.6"
   - "2.7"
-  - "3.3"
+  - "3.5"
+  - "3.6"
 install:
   - python setup.py sdist --formats=gztar -k
   - find ./dist -iname "*.tar.gz" -print0 | xargs -0 pip install
