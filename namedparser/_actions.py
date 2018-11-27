@@ -9,10 +9,8 @@ from .structures import (
     ValueLists,
 )
 
-
 valuelists_detection = lambda s, l, t: ValueLists(t)
 quoted_valuelists_detection = lambda s, l, t: ValueLists(t, '"')
-
 
 
 def expression_type_detection(st, location_of__matching_substring, toks):

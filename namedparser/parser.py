@@ -10,7 +10,6 @@ from pyparsing import (
     Group,
     WordEnd,
     Forward,
-    White,
     ParserElement,
     CharsNotIn,
     QuotedString,
@@ -19,8 +18,6 @@ from pyparsing import (
     removeQuotes,
 )
 from pyparsing import (nums, alphanums, cppStyleComment, )
-# from pyparsing import (ParseResults, )
-# from pyparsing import (ParseException, )
 
 from ._actions import (
     valuelists_detection,
@@ -29,6 +26,8 @@ from ._actions import (
     expression_type_detection_in_nestedvalues,
 )
 
+# from pyparsing import (ParseResults, )
+# from pyparsing import (ParseException, )
 
 BASE_STRINGS = alphanums + "-" + "_"
 NETWORK_STRINGS = alphanums + "-" + "_" + '.'  # 適時調整
@@ -36,27 +35,24 @@ BASE_WORDS = Word(BASE_STRINGS)
 QUOTED_WORDS = quotedString.addParseAction(removeQuotes)
 END_OF_WORDS = WordEnd(BASE_STRINGS)
 
-
 LineSeparator = Literal(';').suppress().setResultsName('separator_token')
 Comments = Optional(cppStyleComment.setResultsName('comment'))
 opener, closer = Literal('{'), Literal('}')
 
 # ex: {1.1.1.1; 2.2.2.2; ...}
 WORD_LIST = (
-    opener.suppress() +
-    delimitedList(Word(NETWORK_STRINGS), delim=';') +
-    LineSeparator +
-    closer.suppress()
+        opener.suppress() +
+        delimitedList(Word(NETWORK_STRINGS), delim=';') +
+        LineSeparator +
+        closer.suppress()
 ).setParseAction(valuelists_detection)
 
 QUOTED_WORD_LIST = (
-    opener.suppress() +
-    delimitedList(QUOTED_WORDS, delim=';') +
-    LineSeparator +
-    closer.suppress()
+        opener.suppress() +
+        delimitedList(QUOTED_WORDS, delim=';') +
+        LineSeparator +
+        closer.suppress()
 ).setParseAction(quoted_valuelists_detection)
-
-
 
 NameDefinitions = BASE_WORDS.setResultsName('node_type')
 ValDefinitions = OneOrMore(
@@ -65,21 +61,19 @@ ValDefinitions = OneOrMore(
     QuotedString('{', multiline=True, endQuoteChar='}').setParseAction(lambda t: t[0].strip())
 ).setResultsName('value')
 
-
 VarDefinitions = Group(
     NameDefinitions + ValDefinitions
 ).setParseAction(expression_type_detection)
 
-
 NestedVar = Forward().setParseAction(expression_type_detection_in_nestedvalues)
 _NestedContent = (
-    VarDefinitions +
-    CharsNotIn('{' + '}' + ParserElement.DEFAULT_WHITE_CHARS).setParseAction(lambda t: t[0].strip())
+        VarDefinitions +
+        CharsNotIn('{' + '}' + ParserElement.DEFAULT_WHITE_CHARS).setParseAction(lambda t: t[0].strip())
 )
 NestedVar << (
-    opener.suppress() +
-    OneOrMore(NestedVar | _NestedContent) +
-    closer.suppress()
+        opener.suppress() +
+        OneOrMore(NestedVar | _NestedContent) +
+        closer.suppress()
 )
 
 OptionsDefinitions = Group(
@@ -127,7 +121,6 @@ ControlsDefinitions = Group(
     LineSeparator +
     closer.suppress()
 ).setResultsName('controls-node')
-
 
 Expressions = OneOrMore(
     ZoneDefinitions |

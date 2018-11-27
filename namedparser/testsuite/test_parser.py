@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 from __future__ import (division, absolute_import, )
 
-from os import path
-from helper import unittest
+import os
+import unittest
 
 from namedparser import Parser
 from namedparser import structures
@@ -10,7 +10,7 @@ from namedparser import structures
 
 class TestBase(unittest.TestCase):
     def setUp(self):
-        with open(path.dirname(__file__) + '/resources/named.conf') as f:
+        with open(os.path.dirname(__file__) + '/resources/named.conf') as f:
             text = f.read()
         self.prepared_named = Parser.parse_string(text)
 

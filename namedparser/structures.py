@@ -3,7 +3,6 @@ from __future__ import (division, absolute_import, )
 
 from pyparsing import ParseResults
 
-
 '''
 ===========================
 ノードクラスの命名規則
@@ -22,8 +21,8 @@ def _camel_to_hyphened(text):
 
 
 class Results(object):
-    ''' Wrapper of pyparsing.ParseResults
-    '''
+    """ Wrapper of pyparsing.ParseResults
+    """
 
     def __init__(self, parse_result):
         self.values = parse_result
@@ -50,10 +49,10 @@ class ValueDefinitions(object):
         return str(self) + str(other)
 
     def is_same_nodetype(self, nodetype):
-        '''
+        """
         this method cannot detect unknown node
         TODO: unknownもわかったほうがよいかな？
-        '''
+        """
         if isinstance(nodetype, str):
             return _camel_to_hyphened(self.__class__.__name__) == nodetype
         else:
@@ -92,7 +91,7 @@ class UnknowNode(ValueDefinitions, EasyAcceesser, dict):
         )
 
     def is_same_nodetype(self, nodetype):
-        ''' '''
+        """ """
         return self.node_type == nodetype
 
 
@@ -237,10 +236,10 @@ class Inet(ValueDefinitions, EasyAcceesser, dict):
         if self['port']:
             port = ' port ' + self['port']
         return (
-            'inet ' + self['ipaddr'] + port +
-            ' allow ' + str(self['allows']) +
-            ' keys ' + str(self['keys']) +
-            ';'
+                'inet ' + self['ipaddr'] + port +
+                ' allow ' + str(self['allows']) +
+                ' keys ' + str(self['keys']) +
+                ';'
         )
 
 
@@ -260,10 +259,10 @@ class Controls(ValueDefinitions, EasyAcceesser, dict):
 
 
 class DefinitionsContainer(object):
-    '''
+    """
     :warning:
         the handler of setParseAction should not return type of list.
-    '''
+    """
 
     def __init__(self, var):
         self.values = var
